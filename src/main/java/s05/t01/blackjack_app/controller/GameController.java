@@ -36,7 +36,7 @@ public class GameController {
     }
 
     @DeleteMapping("/game/{id}/delete")
-    @Operation(summary = "Detele a game by ID")
+    @Operation(summary = "Delete a game by ID")
     @ApiResponse(responseCode = "204 NO CONTENT", description = "The game was deleted successfully.")
     public void deleteGameById(@PathVariable Long gameId){
         //return service.deleteGameById();
