@@ -21,7 +21,6 @@ public class SQLPlayerEntity {
     @NotBlank
     private String playerName;
 
-    @Column(name = "Number of hands won", nullable = false)
     @NotBlank
     @PositiveOrZero
     private int playerScore;
