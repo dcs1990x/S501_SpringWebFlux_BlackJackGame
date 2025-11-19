@@ -23,7 +23,7 @@ public class GameController {
     @Operation(summary = "Play a hand")
     @ApiResponse(responseCode = "200 OK", description = "The hand was played. ")
     public void postHand(@PathVariable Long gameId,
-                         @RequestBody(Hand hand)){
+                         @RequestBody Hand hand){
         //return service.playHand();
     }
 
