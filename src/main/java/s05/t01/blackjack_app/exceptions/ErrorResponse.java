@@ -1,0 +1,13 @@
+package s05.t01.blackjack_app.exceptions;
+
+import lombok.Getter;
+
+@Getter
+public class ErrorResponse {
+
+    private String message;
+
+    public ErrorResponse(String message){
+        this.message = message;
+    }
+}
