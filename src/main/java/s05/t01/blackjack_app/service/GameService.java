@@ -7,6 +7,7 @@ import s05.t01.blackjack_app.entities.mysql.SQLGameEntity;
 import s05.t01.blackjack_app.repository.SQLGameRepository;
 import s05.t01.blackjack_app.repository.SQLPlayerRepository;
 import s05.t01.blackjack_app.service.dtos.SQLGameResponseDTO;
+import s05.t01.blackjack_app.service.dtos.SQLPlayerRequestDTO;
 
 @Service
 public class GameService {
@@ -21,7 +22,7 @@ public class GameService {
         this.playerService = playerService;
     }
 
-    public ResponseEntity<SQLGameResponseDTO> createNewGame(@NotBlank String playerName){
+    public ResponseEntity<SQLGameResponseDTO> createNewGame(SQLPlayerRequestDTO sqlPlayerRequestDTO){
         String enteredPlayerName = playerService.createPlayerName();
         SQLGameEntity savedGame = sqlGameRepository.save(sqlGameEntity);
         return
