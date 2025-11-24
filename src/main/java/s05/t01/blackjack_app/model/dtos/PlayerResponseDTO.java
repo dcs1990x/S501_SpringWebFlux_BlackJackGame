@@ -2,7 +2,7 @@ package s05.t01.blackjack_app.model.dtos;
 
 import lombok.Builder;
 import lombok.Data;
-import s05.t01.blackjack_app.entities.mysql.SQLPlayerEntity;
+import s05.t01.blackjack_app.model.entities.PlayerEntity;
 
 @Data
 @Builder
@@ -10,15 +10,15 @@ public class PlayerResponseDTO{
 
     private Long id;
     private String name;
-    private Integer gamesWon;
-    private Integer gamesLost;
+    private Integer playerWins;
+    private Integer playerLosses;
 
-    public static PlayerResponseDTO fromEntity(SQLPlayerEntity SQLPlayerEntity) {
+    public static PlayerResponseDTO fromEntity(PlayerEntity PlayerEntity) {
         return PlayerResponseDTO.builder()
-                .id(SQLPlayerEntity.getPlayerId())
-                .name(SQLPlayerEntity.getPlayerName())
-                .gamesWon(SQLPlayerEntity.getPlayerWins())
-                .gamesLost(SQLPlayerEntity.getPlayerLosses())
+                .id(PlayerEntity.getPlayerId())
+                .name(PlayerEntity.getPlayerName())
+                .playerWins(PlayerEntity.getPlayerWins())
+                .playerLosses(PlayerEntity.getPlayerLosses())
                 .build();
     }
 }
