@@ -2,10 +2,10 @@ package s05.t01.blackjack_app.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import s05.t01.blackjack_app.entities.mysql.SQLPlayerEntity;
+import s05.t01.blackjack_app.model.entities.PlayerEntity;
 
 @Repository
-public interface SQLPlayerRepository extends CrudRepository<SQLPlayerEntity, Long> {
+public interface SQLPlayerRepository extends CrudRepository<PlayerEntity, Long> {
 
 
 }

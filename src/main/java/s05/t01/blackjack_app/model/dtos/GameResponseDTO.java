@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import s05.t01.blackjack_app.entities.mysql.SQLGameEntity;
+import s05.t01.blackjack_app.model.entities.GameEntity;
+import s05.t01.blackjack_app.model.entities.GameStatus;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,18 +27,18 @@ public class GameResponseDTO {
     private List<CardDTO> playerHand;
     private List<CardDTO> dealerHand;
 
-    public static GameResponseDTO fromEntity(SQLGameEntity sqlGameEntity) {
+    public static GameResponseDTO fromEntity(GameEntity gameEntity) {
         return GameResponseDTO.builder()
-                .gameId(sqlGameEntity.getGameId())
-                .playerName(sqlGameEntity.getPlayerName())
-                .playerScore(sqlGameEntity.getPlayerScore())
-                .dealerScore(sqlGameEntity.getDealerScore())
-                .createdDate(sqlGameEntity.getCreatedDate())
-                .status(sqlGameEntity.getGameStatus())
-                .finishedDate(sqlGameEntity.getFinishedDate())
-                .winnerName(sqlGameEntity.getWinnerName())
-                .playerHand(sqlGameEntity.getPlayerHand())
-                .dealerHand(sqlGameEntity.getDealerHand())
+                .gameId(gameEntity.getGameId())
+                .playerName(gameEntity.getPlayerName())
+                .playerScore(gameEntity.getPlayerScore())
+                .dealerScore(gameEntity.getDealerScore())
+                .createdDate(gameEntity.getCreatedDate())
+                .gameStatus(gameEntity.getGameStatus())
+                .finishedDate(gameEntity.getFinishedDate())
+                .winnerName(gameEntity.getWinnerName())
+                .playerHand(gameEntity.getPlayerHand())
+                .dealerHand(gameEntity.getDealerHand())
                 .build();
     }
 }
