@@ -2,7 +2,7 @@ package s05.t01.blackjack_app.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import s05.t01.blackjack_app.entities.mysql.SQLGameEntity;
+import s05.t01.blackjack_app.model.entities.GameEntity;
 import s05.t01.blackjack_app.repository.SQLGameRepository;
 import s05.t01.blackjack_app.repository.SQLPlayerRepository;
 import s05.t01.blackjack_app.model.dtos.GameResponseDTO;
@@ -22,7 +22,7 @@ public class GameService {
 
     public ResponseEntity<GameResponseDTO> createNewGame(CreatePlayerRequestDTO createPlayerRequestDTO){
         String enteredPlayerName = playerService.createPlayer(createPlayerRequestDTO);
-        SQLGameEntity savedGame = sqlGameRepository.save(sqlGameEntity);
+        GameEntity savedGame = sqlGameRepository.save(sqlGameEntity);
         return
     }
 }
