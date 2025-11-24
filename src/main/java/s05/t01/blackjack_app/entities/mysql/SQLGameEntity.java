@@ -11,12 +11,14 @@ public class SQLGameEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Game ID")
-    private String gameId;
+    private Long gameId;
+
+    @Column(name = "Player Name")
+    private String playerName;
 
     @Column(name = "Ongoing/Finished")
     private boolean isFinished;
 
-    public SQLGameEntity(boolean isFinished){
-        this.isFinished = false;
-    }
+    @Column(name = "Winner")
+    private String winnerName;
 }
