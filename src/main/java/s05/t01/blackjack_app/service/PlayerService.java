@@ -22,12 +22,13 @@ public class PlayerService {
         this.sqlPlayerRepository = sqlPlayerRepository;
     }
 
-    public ResponseEntity<SQLPlayerResponseDTO> createPlayer(SQLPlayerRequestDTO sqlPlayerRequestDTO){
-        String newPlayerName = getPlayerName();
+    public ResponseEntity<SQLPlayerResponseDTO> createPlayer(SQLPlayerRequestDTO sqlPlayerRequestDTO) {
         SQLPlayerEntity sqlPlayerEntity = dtoEntityMapper.toEntity(sqlPlayerRequestDTO);
-        sqlPlayerRepository.save(sqlPlayerEntity);
-        ResponseEntity<SQLPlayerResponseDTO> playerdto = dtoEntityMapper.toDTO(sqlPlayerEntity);
-        return
+        String newPlayerName = getPlayerName();
+        sqlPlayerEntity.setPlayerName(newPlayerName);
+        SQLPlayerEntity savedEntity = sqlPlayerRepository.save(sqlPlayerEntity);
+        SQLPlayerResponseDTO savedPlayerDTO = dtoEntityMapper.toDTO(savedEntity);
+        return ResponseEntity.ok(savedPlayerDTO);
     }
 
     public String getPlayerName(){
@@ -35,5 +36,4 @@ public class PlayerService {
         System.out.println("Type your name: ");
         return scanner.nextLine();
     }
-
 }
