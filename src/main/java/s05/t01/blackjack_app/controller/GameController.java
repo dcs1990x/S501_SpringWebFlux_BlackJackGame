@@ -6,13 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import s05.t01.blackjack_app.entities.mysql.SQLPlayerEntity;
 import s05.t01.blackjack_app.service.GameService;
-import s05.t01.blackjack_app.service.dtos.SQLGameResponseDTO;
-import s05.t01.blackjack_app.service.dtos.SQLPlayerRequestDTO;
+import s05.t01.blackjack_app.service.dtos.GameRequestDTO;
+import s05.t01.blackjack_app.service.dtos.GameResponseDTO;
 
 @RestController
-@RequestMapping("/blackjack")
+@RequestMapping("/game")
 @Tag(name = "Blackjack API", description = "REST API for Blackjack game with R2DBC")
 public class GameController {
 
@@ -25,8 +24,8 @@ public class GameController {
     @PostMapping("/game/new")
     @Operation(summary = "Create a new game")
     @ApiResponse(responseCode = "201", description = "The game was created successfully.")
-    public ResponseEntity<SQLGameResponseDTO> postNewGame(@RequestBody SQLPlayerRequestDTO sqlPlayerRequestDTO) {
-        gameService.createNewGame(sqlPlayerRequestDTO);
+    public ResponseEntity<GameResponseDTO> postNewGame(@RequestBody GameRequestDTO gameRequestDTO) {
+        gameService.createNewGame(gameRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body();
     }
 

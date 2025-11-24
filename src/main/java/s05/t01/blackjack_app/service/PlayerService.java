@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import s05.t01.blackjack_app.entities.mysql.SQLPlayerEntity;
 import s05.t01.blackjack_app.repository.SQLGameRepository;
 import s05.t01.blackjack_app.repository.SQLPlayerRepository;
-import s05.t01.blackjack_app.service.dtos.SQLPlayerRequestDTO;
-import s05.t01.blackjack_app.service.dtos.SQLPlayerResponseDTO;
+import s05.t01.blackjack_app.service.dtos.PlayerRequestDTO;
+import s05.t01.blackjack_app.service.dtos.PlayerResponseDTO;
 import java.util.Scanner;
 
 @Service
@@ -22,12 +22,12 @@ public class PlayerService {
         this.sqlPlayerRepository = sqlPlayerRepository;
     }
 
-    public ResponseEntity<SQLPlayerResponseDTO> createPlayer(SQLPlayerRequestDTO sqlPlayerRequestDTO) {
-        SQLPlayerEntity sqlPlayerEntity = dtoEntityMapper.toEntity(sqlPlayerRequestDTO);
+    public ResponseEntity<PlayerResponseDTO> createPlayer(PlayerRequestDTO playerRequestDTO) {
+        SQLPlayerEntity sqlPlayerEntity = dtoEntityMapper.toEntity(playerRequestDTO);
         String newPlayerName = getPlayerName();
         sqlPlayerEntity.setPlayerName(newPlayerName);
         SQLPlayerEntity savedEntity = sqlPlayerRepository.save(sqlPlayerEntity);
-        SQLPlayerResponseDTO savedPlayerDTO = dtoEntityMapper.toDTO(savedEntity);
+        PlayerResponseDTO savedPlayerDTO = dtoEntityMapper.toDTO(savedEntity);
         return ResponseEntity.ok(savedPlayerDTO);
     }
 
