@@ -1,6 +1,5 @@
 package s05.t01.blackjack_app.service;
 
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import s05.t01.blackjack_app.entities.mysql.SQLGameEntity;
@@ -23,7 +22,7 @@ public class GameService {
     }
 
     public ResponseEntity<SQLGameResponseDTO> createNewGame(SQLPlayerRequestDTO sqlPlayerRequestDTO){
-        String enteredPlayerName = playerService.createPlayerName();
+        String enteredPlayerName = playerService.createPlayer(sqlPlayerRequestDTO);
         SQLGameEntity savedGame = sqlGameRepository.save(sqlGameEntity);
         return
     }
