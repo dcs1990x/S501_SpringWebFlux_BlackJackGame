@@ -3,9 +3,9 @@ package s05.t01.blackjack_app.service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import s05.t01.blackjack_app.entities.mysql.SQLPlayerEntity;
+import s05.t01.blackjack_app.model.dtos.DTOEntityMapper;
 import s05.t01.blackjack_app.repository.SQLGameRepository;
 import s05.t01.blackjack_app.repository.SQLPlayerRepository;
-import s05.t01.blackjack_app.service.dtos.PlayerRequestDTO;
 import s05.t01.blackjack_app.service.dtos.PlayerResponseDTO;
 import java.util.Scanner;
 
@@ -22,8 +22,8 @@ public class PlayerService {
         this.sqlPlayerRepository = sqlPlayerRepository;
     }
 
-    public ResponseEntity<PlayerResponseDTO> createPlayer(PlayerRequestDTO playerRequestDTO) {
-        SQLPlayerEntity sqlPlayerEntity = dtoEntityMapper.toEntity(playerRequestDTO);
+    public ResponseEntity<PlayerResponseDTO> createPlayer(CreatePlayerRequestDTO createPlayerRequestDTO) {
+        SQLPlayerEntity sqlPlayerEntity = dtoEntityMapper.toEntity(createPlayerRequestDTO);
         String newPlayerName = getPlayerName();
         sqlPlayerEntity.setPlayerName(newPlayerName);
         SQLPlayerEntity savedEntity = sqlPlayerRepository.save(sqlPlayerEntity);
