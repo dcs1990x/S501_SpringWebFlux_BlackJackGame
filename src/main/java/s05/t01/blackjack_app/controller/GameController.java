@@ -35,7 +35,7 @@ public class GameController {
         return Mono.just(ResponseEntity.status(HttpStatus.CREATED).body(newGameDTO));
     }
 
-    @PostMapping("/game/{id}/play")
+    @PutMapping("/game/{id}/play")
     @Operation(summary = "Play a hand")
     @ApiResponse(responseCode = "200", description = "The hand was played. ")
     public void postHand(@PathVariable Long gameId,
@@ -48,15 +48,17 @@ public class GameController {
     @Operation(summary = "Get game details by game ID")
     @ApiResponse(responseCode = "200", description = "The game with the entered ID was found.")
     @ApiResponse(responseCode = "404", description = "A game with the entered ID could not be found.")
-    public void getGameDetailsById(@PathVariable Long gameId){
-        //return ResponseEntity.ok().body();
+    public Mono<ResponseEntity<GameResponseDTO>> getGameDetailsById(@PathVariable Long gameId){
+        Mono<GameEntity> gotGamebyId = gameService.getGame(gameId);
+        GameResponseDTO newGameDTO = dtoEntityMapper.toDTO(gotGamebyId);
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(newGameDTO));
     }
 
     @DeleteMapping("/game/{id}/delete")
     @Operation(summary = "Delete a game by ID")
     @ApiResponse(responseCode = "204", description = "The game was deleted successfully.")
-    public void deleteGameById(@PathVariable Long gameId){
-        //service.deleteGameById();
-        //return ResponseEntity.status(HttpStatus.NO_CONTENT).body();
+    public Mono<ResponseEntity<Void>> deleteGame(@PathVariable Long id) {
+        return gameService.deleteGame(id)
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }

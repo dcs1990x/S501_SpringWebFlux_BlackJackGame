@@ -7,7 +7,6 @@ import s05.t01.blackjack_app.repository.SQLGameRepository;
 import s05.t01.blackjack_app.repository.SQLPlayerRepository;
 import s05.t01.blackjack_app.model.dtos.PlayerResponseDTO;
 import java.util.List;
-import java.util.Scanner;
 
 @Service
 public class PlayerService {

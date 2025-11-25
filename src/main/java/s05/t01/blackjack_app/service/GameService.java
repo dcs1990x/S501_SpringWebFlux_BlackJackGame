@@ -34,4 +34,14 @@ public class GameService {
                     return sqlGameRepository.save(game);
                 });
     }
+
+    public Mono<GameEntity> getGame(Long id) {
+        return sqlGameRepository.findById(id)
+                .switchIfEmpty(Mono.error(new RuntimeException("Game with the entered ID could not be found")));
+    }
+
+    public Mono<Void> deleteGame(Long id){
+        return sqlGameRepository.deleteById(id)
+                .switchIfEmpty(Mono.error(new RuntimeException("Game with the entered ID could not be found")));
+    }
 }
