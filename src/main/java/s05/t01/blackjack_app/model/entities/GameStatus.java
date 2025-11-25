@@ -2,8 +2,7 @@ package s05.t01.blackjack_app.model.entities;
 
 public enum GameStatus {
 
-    NOT_STARTED("Not Started"),
-    ONGOING("Ongoing"),
+    IN_PROGRESS("In Progress"),
     FINISHED("Finished");
 
     private final String statusMessage;

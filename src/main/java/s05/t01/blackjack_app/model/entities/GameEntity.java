@@ -1,13 +1,16 @@
 package s05.t01.blackjack_app.model.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import s05.t01.blackjack_app.model.dtos.CardDTO;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "games")
 public class GameEntity {
 
