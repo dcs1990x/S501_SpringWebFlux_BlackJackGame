@@ -19,6 +19,9 @@ public class GameEntity {
     @Column(name = "Game ID")
     private Long gameId;
 
+    @Column(name = "Player ID", nullable = false)
+    private Long playerId;
+
     @Column(name = "Player Name", nullable = false)
     private String playerName;
 
