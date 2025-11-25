@@ -2,12 +2,8 @@ package s05.t01.blackjack_app.service;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.Flux;
-import s05.t01.blackjack_app.model.entities.GameEntity;
-import s05.t01.blackjack_app.model.entities.GameStatus;
-import s05.t01.blackjack_app.model.entities.PlayerEntity;
-import s05.t01.blackjack_app.repository.SQLGameRepository;
-import s05.t01.blackjack_app.repository.SQLPlayerRepository;
+import s05.t01.blackjack_app.model.entities.*;
+import s05.t01.blackjack_app.repository.*;
 
 @Service
 public class GameService {
@@ -35,13 +31,13 @@ public class GameService {
                 });
     }
 
-    public Mono<GameEntity> getGame(Long id) {
-        return sqlGameRepository.findById(id)
-                .switchIfEmpty(Mono.error(new RuntimeException("Game with the entered ID could not be found")));
+    public Mono<GameEntity> getGameById(Long gameId) {
+        return sqlGameRepository.findById(gameId)
+                .switchIfEmpty(Mono.error(new RuntimeException("Game with the ID " + gameId + " could not be found")));
     }
 
-    public Mono<Void> deleteGame(Long id){
-        return sqlGameRepository.deleteById(id)
-                .switchIfEmpty(Mono.error(new RuntimeException("Game with the entered ID could not be found")));
+    public Mono<Void> deleteGame(Long gameId){
+        return sqlGameRepository.deleteById(gameId)
+                .switchIfEmpty(Mono.error(new RuntimeException("Game with the ID " + gameId + " could not be found")));
     }
 }

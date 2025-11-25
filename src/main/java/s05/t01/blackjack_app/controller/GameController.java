@@ -49,7 +49,7 @@ public class GameController {
     @ApiResponse(responseCode = "200", description = "The game with the entered ID was found.")
     @ApiResponse(responseCode = "404", description = "A game with the entered ID could not be found.")
     public Mono<ResponseEntity<GameResponseDTO>> getGameDetailsById(@PathVariable Long gameId){
-        Mono<GameEntity> gotGamebyId = gameService.getGame(gameId);
+        Mono<GameEntity> gotGamebyId = gameService.getGameById(gameId);
         GameResponseDTO newGameDTO = dtoEntityMapper.toDTO(gotGamebyId);
         return Mono.just(ResponseEntity.status(HttpStatus.OK).body(newGameDTO));
     }
