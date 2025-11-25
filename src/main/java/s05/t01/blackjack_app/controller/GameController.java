@@ -57,8 +57,8 @@ public class GameController {
     @DeleteMapping("/game/{id}/delete")
     @Operation(summary = "Delete a game by ID")
     @ApiResponse(responseCode = "204", description = "The game was deleted successfully.")
-    public Mono<ResponseEntity<Void>> deleteGame(@PathVariable Long id) {
-        return gameService.deleteGame(id)
+    public Mono<ResponseEntity<Void>> deleteGame(@PathVariable Long gameId) {
+        return gameService.deleteGame(gameId)
                 .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }

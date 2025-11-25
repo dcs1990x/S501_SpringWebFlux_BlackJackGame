@@ -3,7 +3,9 @@ package s05.t01.blackjack_app.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.service.GameService;
 import s05.t01.blackjack_app.service.PlayerService;
 
@@ -32,5 +34,13 @@ public class PlayerController {
     @ApiResponse(responseCode = "200 OK", description = "The player ranking was retrieved successfully.")
     public void getPlayersRanking(){
         //return playerService.getPlayersRanking();
+    }
+
+    @DeleteMapping("/player/{id}/delete")
+    @Operation(summary = "Delete a player by ID")
+    @ApiResponse(responseCode = "204", description = "The player was deleted successfully.")
+    public Mono<ResponseEntity<Void>> deletePlayer(@PathVariable Long playerId) {
+        return gameService.deleteGame(playerId)
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }
