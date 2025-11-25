@@ -1,8 +1,6 @@
 package s05.t01.blackjack_app.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import org.springframework.stereotype.Repository;
-import s05.t01.blackjack_app.model.entities.PlayerEntity;
+import s05.t01.blackjack_app.model.entities.GameEntity;
 
-@Repository
-public interface SQLGameRepository extends ReactiveCrudRepository<PlayerEntity, Long> {}
+public interface SQLGameRepository extends ReactiveCrudRepository<GameEntity, Long> {}
