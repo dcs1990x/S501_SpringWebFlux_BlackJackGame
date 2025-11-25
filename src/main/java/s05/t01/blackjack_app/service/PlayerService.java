@@ -3,6 +3,7 @@ package s05.t01.blackjack_app.service;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import s05.t01.blackjack_app.exceptions.PlayerNotFoundException;
 import s05.t01.blackjack_app.model.entities.PlayerEntity;
 import s05.t01.blackjack_app.model.dtos.DTOEntityMapper;
 import s05.t01.blackjack_app.repository.*;
@@ -25,16 +26,15 @@ public class PlayerService {
     }
 
     public Mono<PlayerEntity> getPlayerById(Long playerId) {
-        PlayerEntity foundPlayer = sqlPlayerRepository.findById(playerId)
-                .switchIfEmpty(Mono.error(new PlayerNotFoundException("Player with ID " + playerId + " could not be found.")));
-        return Mono.just(foundPlayer);
+        return sqlPlayerRepository.findById(playerId)
+                .switchIfEmpty(Mono.error(new PlayerNotFoundException(playerId)));
     }
 
     public Mono<Void> deletePlayer(Long playerId) {
         return sqlPlayerRepository.existsById(playerId)
                 .flatMap(exists -> exists ?
                         sqlPlayerRepository.deleteById(playerId) :
-                        Mono.error(new PlayerNotFoundException("Player with ID " + playerId + " could not be found."))
+                        Mono.error(new PlayerNotFoundException(playerId))
                 );
     }
 }
