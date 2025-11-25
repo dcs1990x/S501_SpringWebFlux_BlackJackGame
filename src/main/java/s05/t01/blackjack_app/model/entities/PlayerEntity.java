@@ -1,16 +1,17 @@
-package s05.t01.blackjack_app.entities.mysql;
+package s05.t01.blackjack_app.model.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "players")
-public class SQLPlayerEntity {
+public class PlayerEntity {
 
     @Column(name = "ID", nullable = false)
     @Id
@@ -18,13 +19,9 @@ public class SQLPlayerEntity {
     private Long playerId;
 
     @Column(name = "Name", nullable = false, unique = true)
+    @NonNull
     @NotBlank
     private String playerName;
-
-    @Column(name = "Number of hands won", nullable = false)
-    @NotBlank
-    @PositiveOrZero
-    private int playerScore;
 
     @Column(name = "Number of games won", nullable = false)
     @NotBlank
@@ -35,11 +32,4 @@ public class SQLPlayerEntity {
     @NotBlank
     @PositiveOrZero
     private int playerLosses;
-
-    public SQLPlayerEntity(String playerName){
-        this.playerName = playerName.trim();
-        this.playerScore = 0;
-        this.playerWins = 0;
-        this.playerLosses = 0;
-    }
 }

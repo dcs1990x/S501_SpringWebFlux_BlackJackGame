@@ -2,57 +2,55 @@ package s05.t01.blackjack_app.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import s05.t01.blackjack_app.service.GameService;
+import s05.t01.blackjack_app.model.dtos.CreateGameRequestDTO;
+import s05.t01.blackjack_app.model.dtos.GameResponseDTO;
 
 @RestController
-@RequestMapping("/blackjack")
-@Tag(name="Blackjack API", description="REST API for Blackjack game with R2DBC")
+@RequestMapping("/game")
+@Tag(name = "Blackjack API", description = "REST API for Blackjack game with R2DBC")
 public class GameController {
 
-    //private final GameService service;
+    private final GameService gameService;
+
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @PostMapping("/game/new")
     @Operation(summary = "Create a new game")
-    @ApiResponse(responseCode = "201 CREATED", description = "The game was created successfully.")
-    public void postNewGame(@RequestParam(value = "name", defaultValue = "user") String playerName){
-        //return service.createNewGame();
+    @ApiResponse(responseCode = "201", description = "The game was created successfully.")
+    public ResponseEntity<GameResponseDTO> postNewGame(@RequestBody CreateGameRequestDTO gameRequestDTO) {
+        gameService.createNewGame(gameRequestDTO.getPlayerName());
+        return ResponseEntity.status(HttpStatus.CREATED).body();
     }
 
     @PostMapping("/game/{id}/play")
     @Operation(summary = "Play a hand")
-    @ApiResponse(responseCode = "200 OK", description = "The hand was played. ")
+    @ApiResponse(responseCode = "200", description = "The hand was played. ")
     public void postHand(@PathVariable Long gameId,
                          @RequestBody Hand hand){
-        //return service.playHand();
+        //service.playHand();
+        //return ResponseEntity.ok().body();
     }
 
-    @GetMapping("/game/{userId}")
+    @GetMapping("/game/{gameId}")
     @Operation(summary = "Get game details by game ID")
-    @ApiResponse(responseCode = "200 OK", description = "The game with the entered ID was found.")
-    @ApiResponse(responseCode = "404 NOT FOUND", description = "A game with the entered ID could not be found.")
+    @ApiResponse(responseCode = "200", description = "The game with the entered ID was found.")
+    @ApiResponse(responseCode = "404", description = "A game with the entered ID could not be found.")
     public void getGameDetailsById(@PathVariable Long gameId){
-        //return service.findById();
+        //return ResponseEntity.ok().body();
     }
 
     @DeleteMapping("/game/{id}/delete")
     @Operation(summary = "Delete a game by ID")
-    @ApiResponse(responseCode = "204 NO CONTENT", description = "The game was deleted successfully.")
+    @ApiResponse(responseCode = "204", description = "The game was deleted successfully.")
     public void deleteGameById(@PathVariable Long gameId){
-        //return service.deleteGameById();
-    }
-
-    @GetMapping("/ranking")
-    @Operation(summary = "Get player ranking")
-    @ApiResponse(responseCode = "200 OK", description = "The player ranking was retrieved successfully.")
-    public void getPlayersRanking(){
-        //return service.getPlayersRanking();
-    }
-
-    @PutMapping("/player/{playerId}")
-    @Operation(summary = "Change player name")
-    @ApiResponse(responseCode = "200 OK", description = "The player name was changed successfully.")
-    public void putPlayerName(@PathVariable Long playerId){
-        //return service.putPlayerName();
+        //service.deleteGameById();
+        //return ResponseEntity.status(HttpStatus.NO_CONTENT).body();
     }
 }
