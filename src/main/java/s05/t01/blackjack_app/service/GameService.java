@@ -1,12 +1,12 @@
 package s05.t01.blackjack_app.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import s05.t01.blackjack_app.model.dtos.CreateGameRequestDTO;
+import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.model.entities.GameEntity;
+import s05.t01.blackjack_app.model.entities.GameStatus;
+import s05.t01.blackjack_app.model.entities.PlayerEntity;
 import s05.t01.blackjack_app.repository.SQLGameRepository;
 import s05.t01.blackjack_app.repository.SQLPlayerRepository;
-import s05.t01.blackjack_app.model.dtos.GameResponseDTO;
 
 @Service
 public class GameService {
@@ -19,9 +19,18 @@ public class GameService {
         this.sqlPlayerRepository = sqlPlayerRepository;
     }
 
-    public ResponseEntity<GameResponseDTO> createNewGame(CreateGameRequestDTO createGameRequestDTO){
-        String enteredPlayerName = playerService.createPlayer(createPlayerRequestDTO);
-        GameEntity savedGame = sqlGameRepository.save(sqlGameEntity);
-        return
+    public Mono<GameEntity> createGame(String playerName) {
+        PlayerEntity player = new PlayerEntity();
+        player.setPlayerName(playerName);
+        player.setPlayerWins(0);
+        player.setPlayerLosses(0);
+
+        return sqlPlayerRepository.save(player)
+                .flatMap(savedPlayer -> {
+                    GameEntity game = new GameEntity();
+                    game.setPlayerId(savedPlayer.getPlayerId());
+                    game.setGameStatus(GameStatus.IN_PROGRESS);
+                    return sqlGameRepository.save(game);
+                });
     }
 }

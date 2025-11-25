@@ -30,12 +30,6 @@ public class PlayerService {
         return savedPlayerDTO;
     }
 
-    public String getPlayerName(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Type your name: ");
-        return scanner.nextLine();
-    }
-
     public List<PlayerEntity> getAllPlayers() {
         return SQLPlayerRepository.findAll();
     }
