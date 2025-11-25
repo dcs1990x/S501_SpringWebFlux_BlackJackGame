@@ -1,6 +1,7 @@
 package s05.t01.blackjack_app.model.entities;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.Transient;
 import lombok.*;
 import s05.t01.blackjack_app.model.dtos.CardDTO;
 import java.time.LocalDate;
