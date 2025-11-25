@@ -1,48 +1,40 @@
 package s05.t01.blackjack_app.service;
 
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.model.entities.PlayerEntity;
 import s05.t01.blackjack_app.model.dtos.DTOEntityMapper;
-import s05.t01.blackjack_app.repository.SQLGameRepository;
-import s05.t01.blackjack_app.repository.SQLPlayerRepository;
-import s05.t01.blackjack_app.model.dtos.PlayerResponseDTO;
-import java.util.List;
+import s05.t01.blackjack_app.repository.*;
 
 @Service
 public class PlayerService {
 
     private final SQLGameRepository sqlGameRepository;
     private final SQLPlayerRepository sqlPlayerRepository;
-    private DTOEntityMapper dtoEntityMapper;
+    private final DTOEntityMapper dtoEntityMapper;
 
-    public PlayerService(SQLGameRepository sqlGameRepository, SQLPlayerRepository sqlPlayerRepository) {
+    public PlayerService(SQLGameRepository sqlGameRepository, SQLPlayerRepository sqlPlayerRepository, DTOEntityMapper dtoEntityMapper) {
         this.sqlGameRepository = sqlGameRepository;
         this.sqlPlayerRepository = sqlPlayerRepository;
+        this.dtoEntityMapper = dtoEntityMapper;
     }
 
-    public PlayerResponseDTO createPlayer(CreatePlayerRequestDTO createPlayerRequestDTO) {
-        PlayerEntity playerEntity = dtoEntityMapper.toEntity(createPlayerRequestDTO);
-        String newPlayerName = getPlayerName();
-        playerEntity.setPlayerName(newPlayerName);
-        PlayerEntity savedEntity = sqlPlayerRepository.save(playerEntity);
-        PlayerResponseDTO savedPlayerDTO = dtoEntityMapper.toDTO(savedEntity);
-        return savedPlayerDTO;
+    public Flux<PlayerEntity> getAllPlayers() {
+        return sqlPlayerRepository.findAll();
     }
 
-    public List<PlayerEntity> getAllPlayers() {
-        return SQLPlayerRepository.findAll();
+    public Mono<PlayerEntity> getPlayerById(Long playerId) {
+        PlayerEntity foundPlayer = sqlPlayerRepository.findById(playerId)
+                .switchIfEmpty(Mono.error(new PlayerNotFoundException("Player with ID " + playerId + " could not be found.")));
+        return Mono.just(foundPlayer);
     }
 
-    public PlayerResponseDTO getPlayerById(Long playerId) {
-        PlayerEntity player = SQLPlayerRepository.findById(playerId)
-                .orElseThrow(() -> new PlayerNotFoundException("Player with ID " + playerId + " was not found."));
-        return PlayerResponseDTO.fromEntity(player);
-    }
-
-    public void deletePlayer(Long playerId) {
-        if (!SQLPlayerRepository.existsById(playerId)) {
-            throw new PlayerNotFoundException("Player with ID " + playerId + " was not found.");
-        }
-        SQLPlayerRepository.deleteById(playerId);
+    public Mono<Void> deletePlayer(Long playerId) {
+        return sqlPlayerRepository.existsById(playerId)
+                .flatMap(exists -> exists ?
+                        sqlPlayerRepository.deleteById(playerId) :
+                        Mono.error(new PlayerNotFoundException("Player with ID " + playerId + " could not be found."))
+                );
     }
 }
