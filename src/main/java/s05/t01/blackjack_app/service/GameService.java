@@ -2,6 +2,7 @@ package s05.t01.blackjack_app.service;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import s05.t01.blackjack_app.exceptions.GameNotFoundException;
 import s05.t01.blackjack_app.model.entities.*;
 import s05.t01.blackjack_app.repository.*;
 
@@ -33,11 +34,11 @@ public class GameService {
 
     public Mono<GameEntity> getGameById(Long gameId) {
         return sqlGameRepository.findById(gameId)
-                .switchIfEmpty(Mono.error(new RuntimeException("Game with the ID " + gameId + " could not be found")));
+                .switchIfEmpty(Mono.error(new GameNotFoundException(gameId)));
     }
 
     public Mono<Void> deleteGame(Long gameId){
         return sqlGameRepository.deleteById(gameId)
-                .switchIfEmpty(Mono.error(new RuntimeException("Game with the ID " + gameId + " could not be found")));
+                .switchIfEmpty(Mono.error(new GameNotFoundException(gameId)));
     }
 }
