@@ -6,7 +6,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "players")
