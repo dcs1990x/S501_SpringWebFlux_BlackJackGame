@@ -1,4 +1,4 @@
-package s05.t01.blackjack_app.model.dtos;
+package s05.t01.blackjack_app.domain.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

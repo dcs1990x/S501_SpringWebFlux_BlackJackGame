@@ -1,4 +1,4 @@
-package s05.t01.blackjack_app.model.entities;
+package s05.t01.blackjack_app.domain.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

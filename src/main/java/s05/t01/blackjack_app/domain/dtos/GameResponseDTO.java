@@ -1,11 +1,11 @@
-package s05.t01.blackjack_app.model.dtos;
+package s05.t01.blackjack_app.domain.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import s05.t01.blackjack_app.model.entities.GameEntity;
-import s05.t01.blackjack_app.model.entities.GameStatus;
+import s05.t01.blackjack_app.domain.entities.GameEntity;
+import s05.t01.blackjack_app.domain.entities.GameStatus;
 
 import java.time.LocalDate;
 import java.util.List;

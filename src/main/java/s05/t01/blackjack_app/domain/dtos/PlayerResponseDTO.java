@@ -1,8 +1,8 @@
-package s05.t01.blackjack_app.model.dtos;
+package s05.t01.blackjack_app.domain.dtos;
 
 import lombok.Builder;
 import lombok.Data;
-import s05.t01.blackjack_app.model.entities.PlayerEntity;
+import s05.t01.blackjack_app.domain.entities.PlayerEntity;
 
 @Data
 @Builder

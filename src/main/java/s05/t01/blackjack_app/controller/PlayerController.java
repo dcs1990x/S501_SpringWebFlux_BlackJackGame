@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import s05.t01.blackjack_app.domain.dtos.PlayerResponseDTO;
+import s05.t01.blackjack_app.domain.dtos.UpdatePlayerNameRequestDTO;
 import s05.t01.blackjack_app.service.GameService;
 import s05.t01.blackjack_app.service.PlayerService;
 
@@ -22,12 +24,12 @@ public class PlayerController {
         this.gameService = gameService;
     }
 
-    @PutMapping("/player/{playerId}")
+    /*@PutMapping("/player/{playerId}")
     @Operation(summary = "Change player name")
     @ApiResponse(responseCode = "200 OK", description = "The player name was changed successfully.")
-    public void putPlayerName(@PathVariable Long playerId){
+    public Mono<ResponseEntity<PlayerResponseDTO>> putPlayerName(@PathVariable Long playerId, @RequestBody UpdatePlayerNameRequestDTO updatePlayerNameRequestDTO){
         //return playerService.putPlayerName();
-    }
+    }*/
 
     @GetMapping("/ranking")
     @Operation(summary = "Get player ranking")
@@ -36,7 +38,7 @@ public class PlayerController {
         //return playerService.getPlayersRanking();
     }
 
-    @DeleteMapping("/player/{id}/delete")
+    @DeleteMapping("/player/{playerId}/delete")
     @Operation(summary = "Delete a player by ID")
     @ApiResponse(responseCode = "204", description = "The player was deleted successfully.")
     public Mono<ResponseEntity<Void>> deletePlayer(@PathVariable Long playerId) {

@@ -7,11 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
-import s05.t01.blackjack_app.model.dtos.DTOEntityMapper;
-import s05.t01.blackjack_app.model.entities.GameEntity;
+import s05.t01.blackjack_app.domain.dtos.*;
 import s05.t01.blackjack_app.service.GameService;
-import s05.t01.blackjack_app.model.dtos.CreateGameRequestDTO;
-import s05.t01.blackjack_app.model.dtos.GameResponseDTO;
 
 @RestController
 @RequestMapping("/game")
@@ -30,28 +27,28 @@ public class GameController {
     @Operation(summary = "Create a new game")
     @ApiResponse(responseCode = "201", description = "The game was created successfully.")
     public Mono<ResponseEntity<GameResponseDTO>> postNewGame(@RequestBody CreateGameRequestDTO gameRequestDTO) {
-        Mono<GameEntity> newGame = gameService.createGame(gameRequestDTO.getPlayerName());
-        GameResponseDTO newGameDTO = dtoEntityMapper.toDTO(newGame);
-        return Mono.just(ResponseEntity.status(HttpStatus.CREATED).body(newGameDTO));
+        return gameService.createGame(gameRequestDTO.getPlayerName())
+                .map(dtoEntityMapper::toGameResponseDTO)
+                .map(gameDTO -> ResponseEntity.status(HttpStatus.CREATED).body(gameDTO));
     }
 
-    @PutMapping("/game/{id}/play")
+    /*@PutMapping("/game/{id}/play")
     @Operation(summary = "Play a hand")
     @ApiResponse(responseCode = "200", description = "The hand was played. ")
     public void postHand(@PathVariable Long gameId,
                          @RequestBody Hand hand){
         //service.playHand();
         //return ResponseEntity.ok().body();
-    }
+    }*/
 
     @GetMapping("/game/{gameId}")
     @Operation(summary = "Get game details by game ID")
     @ApiResponse(responseCode = "200", description = "The game with the entered ID was found.")
     @ApiResponse(responseCode = "404", description = "A game with the entered ID could not be found.")
     public Mono<ResponseEntity<GameResponseDTO>> getGameDetailsById(@PathVariable Long gameId){
-        Mono<GameEntity> gotGamebyId = gameService.getGameById(gameId);
-        GameResponseDTO newGameDTO = dtoEntityMapper.toDTO(gotGamebyId);
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(newGameDTO));
+        return gameService.getGameById(gameId)
+                .map(dtoEntityMapper::toGameResponseDTO)
+                .map(gameResponseDTO -> ResponseEntity.status(HttpStatus.OK).body(gameResponseDTO));
     }
 
     @DeleteMapping("/game/{id}/delete")

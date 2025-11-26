@@ -3,7 +3,7 @@ package s05.t01.blackjack_app.service;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.exceptions.GameNotFoundException;
-import s05.t01.blackjack_app.model.entities.*;
+import s05.t01.blackjack_app.domain.entities.*;
 import s05.t01.blackjack_app.repository.*;
 
 @Service
