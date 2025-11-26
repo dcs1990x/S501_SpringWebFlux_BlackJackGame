@@ -32,4 +32,16 @@ public class PlayerEntity {
     @NotBlank
     @PositiveOrZero
     private int playerLosses;
+
+    public int calculateTotalGames(){
+        return this.playerWins + this.playerLosses;
+    }
+
+    public Double calculateWinRate() {
+        int totalGames = calculateTotalGames();
+        if (totalGames == 0) {
+            return 0.0;
+        }
+        return (double) ((this.playerWins / totalGames) * 100);
+    }
 }
