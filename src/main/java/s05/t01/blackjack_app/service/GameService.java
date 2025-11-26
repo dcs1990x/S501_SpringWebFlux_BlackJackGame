@@ -9,12 +9,12 @@ import s05.t01.blackjack_app.repository.*;
 @Service
 public class GameService {
 
-    private final SQLGameRepository sqlGameRepository;
-    private final SQLPlayerRepository sqlPlayerRepository;
+    private final GameRepository gameRepository;
+    private final PlayerRepository playerRepository;
 
-    public GameService(SQLGameRepository sqlGameRepository, SQLPlayerRepository sqlPlayerRepository, PlayerService playerService) {
-        this.sqlGameRepository = sqlGameRepository;
-        this.sqlPlayerRepository = sqlPlayerRepository;
+    public GameService(GameRepository gameRepository, PlayerRepository playerRepository, PlayerService playerService) {
+        this.gameRepository = gameRepository;
+        this.playerRepository = playerRepository;
     }
 
     public Mono<GameEntity> createGame(String playerName) {
@@ -23,22 +23,22 @@ public class GameService {
         player.setPlayerWins(0);
         player.setPlayerLosses(0);
 
-        return sqlPlayerRepository.save(player)
+        return playerRepository.save(player)
                 .flatMap(savedPlayer -> {
                     GameEntity game = new GameEntity();
                     game.setPlayerId(savedPlayer.getPlayerId());
                     game.setGameStatus(GameStatus.IN_PROGRESS);
-                    return sqlGameRepository.save(game);
+                    return gameRepository.save(game);
                 });
     }
 
     public Mono<GameEntity> getGameById(Long gameId) {
-        return sqlGameRepository.findById(gameId)
+        return gameRepository.findById(gameId)
                 .switchIfEmpty(Mono.error(new GameNotFoundException(gameId)));
     }
 
     public Mono<Void> deleteGame(Long gameId){
-        return sqlGameRepository.deleteById(gameId)
+        return gameRepository.deleteById(gameId)
                 .switchIfEmpty(Mono.error(new GameNotFoundException(gameId)));
     }
 }
