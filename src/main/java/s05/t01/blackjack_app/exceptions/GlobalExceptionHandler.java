@@ -10,24 +10,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(FruitNotFoundException.class)
+    @ExceptionHandler(PlayerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ErrorResponse handleNotFoundException(FruitNotFoundException exception){
+    public ErrorResponse handlePlayerNotFoundException(PlayerNotFoundException exception){
         return new ErrorResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(InvalidFruitException.class)
+    @ExceptionHandler(InvalidPlayerNameException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleInvalidFruitException(InvalidFruitException exception){
+    public ErrorResponse handleInvalidFruitException(InvalidPlayerNameException exception){
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(GameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorResponse handleGameNotFoundException(GameNotFoundException exception){
         return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleInvalidFruitConstraints(ConstraintViolationException exception){
+    public ErrorResponse handleInvalidConstraints(ConstraintViolationException exception){
         return new ErrorResponse(exception.getMessage());
     }
 }
