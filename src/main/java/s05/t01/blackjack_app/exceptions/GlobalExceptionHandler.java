@@ -22,4 +22,11 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleGameNotFoundException(GameNotFoundException exception){
         return new ErrorResponse(exception.getMessage());
     }
+
+    @ExceptionHandler(InvalidPlayException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorResponse handleInvalidPlayException(InvalidPlayException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
 }
