@@ -6,9 +6,11 @@ import s05.t01.blackjack_app.domain.dtos.GameResponseDTO;
 import s05.t01.blackjack_app.domain.dtos.PlayRequestDTO;
 import s05.t01.blackjack_app.domain.game_model.GameResult;
 import s05.t01.blackjack_app.domain.game_model.GameStatus;
+import s05.t01.blackjack_app.domain.game_model.GameTurnPhase;
 import s05.t01.blackjack_app.exceptions.GameNotFoundException;
 import s05.t01.blackjack_app.domain.entities.*;
 import s05.t01.blackjack_app.repository.*;
+import java.time.LocalDateTime;
 
 @Service
 public class GameService {
@@ -32,7 +34,9 @@ public class GameService {
                     GameEntity game = new GameEntity();
                     game.setPlayerId(savedPlayer.getPlayerId());
                     game.setGameStatus(GameStatus.IN_PROGRESS);
+                    game.setGameTurnPhase(GameTurnPhase.SETUP);
                     game.setGameResult(GameResult.ONGOING);
+                    game.setCreatedDate(LocalDateTime.now());
                     return gameRepository.save(game);
                 });
     }

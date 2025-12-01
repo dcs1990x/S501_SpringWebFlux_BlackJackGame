@@ -21,7 +21,7 @@ public enum GameTurnPhase {
     }
 
     public boolean isGameActive() {
-        return this != GAME_OVER && this != RESOLUTION;
+        return this != GAME_OVER;
     }
 
     public boolean isPlayerTurn() {

@@ -6,7 +6,8 @@ import lombok.*;
 import s05.t01.blackjack_app.domain.dtos.CardDTO;
 import s05.t01.blackjack_app.domain.game_model.GameResult;
 import s05.t01.blackjack_app.domain.game_model.GameStatus;
-import java.time.LocalDate;
+import s05.t01.blackjack_app.domain.game_model.GameTurnPhase;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -29,17 +30,18 @@ public class GameEntity {
     private String playerName;
 
     @Column(name = "Created at")
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     @Column(name = "Game Status", nullable = false)
     private GameStatus gameStatus;
 
     @Column(name = "Finished at")
-    private LocalDate finishedDate;
+    private LocalDateTime finishedDate;
 
     @Column(name = "Game Result")
     private GameResult gameResult;
 
+    @Transient private GameTurnPhase gameTurnPhase;
     @Transient private int playerScore;
     @Transient private int dealerScore;
     @Transient private List<CardDTO> playerHand;
