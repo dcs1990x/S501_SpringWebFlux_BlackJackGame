@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import s05.t01.blackjack_app.domain.entities.GameEntity;
-import s05.t01.blackjack_app.domain.entities.GameStatus;
+import s05.t01.blackjack_app.domain.game_model.GameStatus;
 
 import java.time.LocalDate;
 import java.util.List;

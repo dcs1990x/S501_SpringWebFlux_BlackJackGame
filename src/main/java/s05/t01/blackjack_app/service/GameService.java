@@ -2,6 +2,10 @@ package s05.t01.blackjack_app.service;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import s05.t01.blackjack_app.domain.dtos.GameResponseDTO;
+import s05.t01.blackjack_app.domain.dtos.PlayRequestDTO;
+import s05.t01.blackjack_app.domain.game_model.GameResult;
+import s05.t01.blackjack_app.domain.game_model.GameStatus;
 import s05.t01.blackjack_app.exceptions.GameNotFoundException;
 import s05.t01.blackjack_app.domain.entities.*;
 import s05.t01.blackjack_app.repository.*;
@@ -28,6 +32,7 @@ public class GameService {
                     GameEntity game = new GameEntity();
                     game.setPlayerId(savedPlayer.getPlayerId());
                     game.setGameStatus(GameStatus.IN_PROGRESS);
+                    game.setGameResult(GameResult.ONGOING);
                     return gameRepository.save(game);
                 });
     }
@@ -35,6 +40,10 @@ public class GameService {
     public Mono<GameEntity> getGameById(Long gameId) {
         return gameRepository.findById(gameId)
                 .switchIfEmpty(Mono.error(new GameNotFoundException(gameId)));
+    }
+
+    public Mono<GameResponseDTO> playHand(PlayRequestDTO playRequestDTO){
+        return;
     }
 
     public Mono<Void> deleteGame(Long gameId){

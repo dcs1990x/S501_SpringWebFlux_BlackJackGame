@@ -1,11 +1,11 @@
-package s05.t01.blackjack_app.domain.entities;
+package s05.t01.blackjack_app.domain.game_model;
 
 public enum GameStatus {
 
-    IN_PROGRESS("In Progress"),
+    IN_PROGRESS("In progress"),
     FINISHED("Finished");
 
-    private final String statusMessage;
+    private String statusMessage;
 
     GameStatus(String statusMessage) {
         this.statusMessage = statusMessage;

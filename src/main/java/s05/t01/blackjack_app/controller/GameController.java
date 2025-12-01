@@ -32,14 +32,15 @@ public class GameController {
                 .map(gameDTO -> ResponseEntity.status(HttpStatus.CREATED).body(gameDTO));
     }
 
-    /*@PutMapping("/game/{id}/play")
+    @PutMapping("/game/{id}/play")
     @Operation(summary = "Play a hand")
     @ApiResponse(responseCode = "200", description = "The hand was played. ")
-    public void postHand(@PathVariable Long gameId,
-                         @RequestBody Hand hand){
-        //service.playHand();
-        //return ResponseEntity.ok().body();
-    }*/
+    public Mono<ResponseEntity<GameResponseDTO>> postHand(@PathVariable Long gameId,
+                         @RequestBody PlayRequestDTO playRequestDTO){
+        return gameService.playHand(playRequestDTO)
+                .map(dtoEntityMapper::toGameResponseDTO)
+                .map(gameDT -> ResponseEntity.status(HttpStatus.OK).body(gameDT));
+    }
 
     @GetMapping("/game/{gameId}")
     @Operation(summary = "Get game details by game ID")

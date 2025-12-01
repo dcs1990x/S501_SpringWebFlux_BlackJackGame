@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.Transient;
 import lombok.*;
 import s05.t01.blackjack_app.domain.dtos.CardDTO;
+import s05.t01.blackjack_app.domain.game_model.GameResult;
+import s05.t01.blackjack_app.domain.game_model.GameStatus;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,8 +37,8 @@ public class GameEntity {
     @Column(name = "Finished at")
     private LocalDate finishedDate;
 
-    @Column(name = "Winner")
-    private String winnerName;
+    @Column(name = "Game Result")
+    private GameResult gameResult;
 
     @Transient private int playerScore;
     @Transient private int dealerScore;
