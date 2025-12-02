@@ -52,7 +52,6 @@ public class PlayerService {
                 .map(dtoEntityMapper::toPlayerResponseDTO);
     }
 
-
     public Mono<Void> deletePlayer(Long playerId) {
         return playerRepository.existsById(playerId)
                 .flatMap(exists -> exists ?

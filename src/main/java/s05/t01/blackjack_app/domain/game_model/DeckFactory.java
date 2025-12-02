@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface DeckFactory {
 
-    List<Card> createSuffledDeck();
+    List<Card> createShuffledDeck();
 }
