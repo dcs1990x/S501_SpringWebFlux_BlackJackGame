@@ -5,6 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.time.Instant;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,11 +18,14 @@ public class GameState {
     private Long gameId;
     private List<Card> playerCards;
     private List<Card> dealerCards;
+    private Long playerId;
     @NonNull private String playerName;
+    @NonNull private Instant createdDate;
+    private Instant finishedDate;
     @NonNull private Integer playerScore;
     @NonNull private Integer dealerScore;
     @NonNull private List<Card> deck;
-    @NonNull private TurnType gamePhase;
+    @NonNull private GamePhase gamePhase;
     @NonNull private GameStatus gameStatus;
-    @NonNull private GameResult result;
+    @NonNull private GameResult gameResult;
 }

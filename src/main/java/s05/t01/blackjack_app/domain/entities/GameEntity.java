@@ -47,5 +47,5 @@ public class GameEntity {
     private GameResult gameResult;
 
     @Field("game_turn_phase")
-    private TurnType turnType;
+    private GamePhase gamePhase;
 }

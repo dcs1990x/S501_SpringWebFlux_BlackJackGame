@@ -12,12 +12,12 @@ import s05.t01.blackjack_app.repository.*;
 @Service
 public class PlayerService {
 
-    private final GameRepository gameRepository;
+    private final GameEntityRepository gameEntityRepository;
     private final PlayerRepository playerRepository;
     private final DTOEntityMapper dtoEntityMapper;
 
-    public PlayerService(GameRepository gameRepository, PlayerRepository playerRepository, DTOEntityMapper dtoEntityMapper) {
-        this.gameRepository = gameRepository;
+    public PlayerService(GameEntityRepository gameEntityRepository, PlayerRepository playerRepository, DTOEntityMapper dtoEntityMapper) {
+        this.gameEntityRepository = gameEntityRepository;
         this.playerRepository = playerRepository;
         this.dtoEntityMapper = dtoEntityMapper;
     }
@@ -41,10 +41,10 @@ public class PlayerService {
                     player.setPlayerName(updatePlayerNameRequestDTO.getNewPlayerName());
                     return playerRepository.save(player)
                             .flatMap(savedPlayer ->
-                                    gameRepository.findAllByPlayerId(playerId)
+                                    gameEntityRepository.findAllByPlayerId(playerId)
                                             .flatMap(game -> {
                                                 game.setPlayerName(savedPlayer.getPlayerName());
-                                                return gameRepository.save(game);
+                                                return gameEntityRepository.save(game);
                                             })
                                             .then(Mono.just(savedPlayer))
                             );

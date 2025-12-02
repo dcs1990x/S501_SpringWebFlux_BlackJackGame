@@ -2,38 +2,40 @@ package s05.t01.blackjack_app.domain.game_model;
 
 import s05.t01.blackjack_app.domain.entities.PlayerEntity;
 import org.springframework.stereotype.Component;
+import java.time.Instant;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 @Component
 public class GameEngine {
 
     private final DeckFactory deckFactory;
-    private final GameState gamestate;
-    private final GameStatus gameStatus;
 
-    public GameEngine(DeckFactory deckFactory, GameState gamestate, GameStatus gameStatus) {
+    public GameEngine(DeckFactory deckFactory) {
         this.deckFactory = deckFactory;
-        this.gamestate = gamestate;
-        this.gameStatus = gameStatus;
     }
 
     public GameState initializeGame(PlayerEntity player) {
-        List<Card> deck = deckFactory.createShuffledDeck();
-        GameState state = new GameState(
+        Deque<Card> deck = new ArrayDeque<>(deckFactory.createShuffledDeck());
+        GameState gameState = new GameState(
                 player.getPlayerName(),
+                Instant.now(),
                 0,
                 0,
-                deck,
-                TurnType.PLAYER_TURN;
+                new ArrayList<>(deck),
+                GamePhase.PLAYER_TURN,
+                GameStatus.IN_PROGRESS,
+                GameResult.ONGOING
         );
-        dealInitialCards(state);
-        return state;
+        dealInitialCards(gameState, deck);
+        return gameState;
     }
 
-    private void dealInitialCards(GameState state) {
-        List<Card> deck = state.getDeck();
-        List<Card> playerCards = new java.util.ArrayList<>();
-        List<Card> dealerCards = new java.util.ArrayList<>();
+    private void dealInitialCards(GameState state, Deque<Card> deck) {
+        List<Card> playerCards = new ArrayList<>();
+        List<Card> dealerCards = new ArrayList<>();
 
         playerCards.add(draw(deck));
         dealerCards.add(draw(deck));
@@ -42,87 +44,100 @@ public class GameEngine {
 
         state.setPlayerCards(playerCards);
         state.setDealerCards(dealerCards);
+        state.setDeck(new ArrayList<>(deck));
 
-        state.setPlayerScore(calculateScore(playerCards));
-        state.setDealerScore(calculateScore(dealerCards));
+        updateScores(state);
     }
 
-    private Card draw(List<Card> deck) {
-        return deck.removeFirst();
+    private Card draw(Deque<Card> deck) {
+        return deck.pollFirst(); // más seguro que removeFirst
     }
 
-    private GameState drawCardForPlayer(GameState state) {
-        Card card = draw(state.getDeck());
-        state.getPlayerCards().add(card);
+    private void updateScores(GameState state) {
         state.setPlayerScore(calculateScore(state.getPlayerCards()));
-        return state;
-    }
-
-    private GameState drawCardForDealer(GameState state) {
-        Card card = draw(state.getDeck());
-        state.getDealerCards().add(card);
         state.setDealerScore(calculateScore(state.getDealerCards()));
-        return state;
     }
 
     public int calculateScore(List<Card> hand) {
-        return hand.stream()
-                .map(Card::getRank)
-                .mapToInt(Rank::getCardValue)
-                .sum();
-    }
+        int total = 0;
+        int aceCount = 0;
 
-    public GameState applyHit(GameState state) {
-        if (state.getResult() != GameResult.IN_PROGRESS) {
-            return state;
-        }
-        if (state.getGamePhase() == TurnType.PLAYER_TURN) {
-            drawCardForPlayer(state);
-
-            if (state.getPlayerScore() > 21) {
-                state.setResult(GameResult.DEALER_WON);
-                gamestate.setGameStatus(GameStatus.FINISHED);
-                return state;
+        for (Card card : hand) {
+            int value = card.getRank().getCardValue();
+            if (card.getRank() == Rank.ACE) {
+                aceCount++;
+                value = 11;
             }
-            return (state.getPlayerScore() == 21)
-                    ? applyStand(state)
-                    : state;
+            total += value;
         }
 
-        drawCardForDealer(state);
-        if (state.getDealerScore() > 21) {
-            state.setResult(GameResult.PLAYER_WON);
-            gamestate.setGameStatus(GameStatus.FINISHED);
+        while (total > 21 && aceCount > 0) {
+            total -= 10;
+            aceCount--;
         }
-        return state;
+        return total;
     }
 
-    public GameState applyStand(GameState state) {
-        if (state.getResult() != GameResult.ONGOING) {
-            return state;
+    public void chooseHit(GameState state) {
+        if (state.getGameStatus() != GameStatus.IN_PROGRESS || state.getGamePhase() != GamePhase.PLAYER_TURN) {
+            return;
         }
-        if (state.getGamePhase() == TurnType.PLAYER_TURN) {
-            return state;
-        }
-        state.setGamePhase(TurnType.DEALER_TURN);
+        state.getPlayerCards().add(drawDeck(state));
+        updateScores(state);
 
+        if (state.getPlayerScore() >= 21) {
+            chooseStand(state);
+        }
+    }
+
+    public void chooseStand(GameState state) {
+        if (state.getGameStatus() != GameStatus.IN_PROGRESS) return;
+
+        state.setGamePhase(GamePhase.DEALER_TURN);
         while (state.getDealerScore() < 17 || state.getDealerScore() < state.getPlayerScore()) {
-            drawCardForDealer(state);
+            state.getDealerCards().add(drawDeck(state));
+            updateScores(state);
         }
         decideWinner(state);
-        return state;
     }
 
-    private void decideWinner(GameState state) {
-        int player = state.getPlayerScore();
-        int dealer = state.getDealerScore();
+    private Card drawDeck(GameState state) {
+        Deque<Card> deck = new ArrayDeque<>(state.getDeck());
+        Card card = draw(deck);
+        state.setDeck(new ArrayList<>(deck));
+        return card;
+    }
 
-        GameResult result =
-                (dealer > 21) ? GameResult.PLAYER_WON :
-                        (player > 21) ? GameResult.DEALER_WON :
-                                (dealer > player) ? GameResult.DEALER_WON :
-                                        (dealer < player) ? GameResult.PLAYER_WON :
-                                                GameResult.PUSH;
-        state.setResult(result);
+    public void decideWinner(GameState gameState) {
+        int playerScore = calculateScore(gameState.getPlayerCards());
+        int dealerScore = calculateScore(gameState.getDealerCards());
+
+        gameState.setPlayerScore(playerScore);
+        gameState.setDealerScore(dealerScore);
+
+        if (playerScore > 21) {
+            gameState.setGameResult(GameResult.DEALER_WON);
+            gameState.setGameStatus(GameStatus.FINISHED);
+            gameState.setGamePhase(GamePhase.GAME_OVER);
+            return;
+        }
+        if (dealerScore > 21) {
+            gameState.setGameResult(GameResult.PLAYER_WON);
+            gameState.setGameStatus(GameStatus.FINISHED);
+            gameState.setGamePhase(GamePhase.GAME_OVER);
+            return;
+        }
+        if (gameState.getGamePhase() == GamePhase.PLAYER_TURN) {
+            gameState.setGameStatus(GameStatus.IN_PROGRESS);
+            return;
+        }
+        if (gameState.getGamePhase() == GamePhase.DEALER_TURN && dealerScore >= 17) {
+            if (playerScore > dealerScore) gameState.setGameResult(GameResult.PLAYER_WON);
+            else if (dealerScore > playerScore) gameState.setGameResult(GameResult.DEALER_WON);
+            else gameState.setGameResult(GameResult.DRAW);
+
+            gameState.setGameStatus(GameStatus.FINISHED);
+            gameState.setGamePhase(GamePhase.GAME_OVER);
+        }
     }
 }

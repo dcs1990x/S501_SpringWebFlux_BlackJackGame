@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import s05.t01.blackjack_app.domain.entities.GameEntity;
-
+import s05.t01.blackjack_app.domain.game_model.GameState;
+import s05.t01.blackjack_app.domain.game_model.GameStatus;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Data
@@ -26,18 +27,20 @@ public class GameResponseDTO {
     private List<CardDTO> playerHand;
     private List<CardDTO> dealerHand;
 
-    public static GameResponseDTO fromEntity(GameEntity gameEntity) {
+    public static GameResponseDTO fromState(GameState state) {
         return GameResponseDTO.builder()
-                .gameId(gameEntity.getGameId())
-                .playerName(gameEntity.getPlayerName())
-                .playerScore(gameEntity.getPlayerScore())
-                .dealerScore(gameEntity.getDealerScore())
-                .createdDate(LocalDate.from(gameEntity.getCreatedDate()))
-                .gameStatus(gameEntity.getGameStatus())
-                .finishedDate(LocalDate.from(gameEntity.getFinishedDate()))
-                .winnerName(gameEntity.getWinnerName())
-                .playerHand(gameEntity.getPlayerHand())
-                .dealerHand(gameEntity.getDealerHand())
+                .gameId(state.getGameId())
+                .playerName(state.getPlayerName())
+                .playerScore(state.getPlayerScore())
+                .dealerScore(state.getDealerScore())
+                .createdDate(state.getCreatedDate().atZone(ZoneId.systemDefault()).toLocalDate())
+                .gameStatus(state.getGameStatus())
+                .finishedDate(state.getFinishedDate() != null
+                        ? state.getFinishedDate().atZone(ZoneId.systemDefault()).toLocalDate()
+                        : null)
+                .winnerName(state.getGameResult() != null ? state.getGameResult().name() : null)
+                .playerHand(CardDTO.fromCards(state.getPlayerCards()))
+                .dealerHand(CardDTO.fromCards(state.getDealerCards()))
                 .build();
     }
 }

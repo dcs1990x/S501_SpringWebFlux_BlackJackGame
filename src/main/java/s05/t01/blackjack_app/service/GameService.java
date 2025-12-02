@@ -11,61 +11,80 @@ import s05.t01.blackjack_app.repository.*;
 @Service
 public class GameService {
 
-    private final GameRepository gameRepository;
+    private final GameEntityRepository gameEntityRepository;
+    private final GameStateRepository gameStateRepository;
     private final PlayerRepository playerRepository;
+    private final GameSyncService gameSyncService;
     private final GameEngine gameEngine;
     private final DTOEntityMapper dtoEntityMapper;
 
-    public GameService(GameRepository gameRepository, PlayerRepository playerRepository, PlayerService playerService, GameEngine gameEngine, DTOEntityMapper dtoEntityMapper) {
-        this.gameRepository = gameRepository;
+    public GameService(GameEntityRepository gameEntityRepository, PlayerRepository playerRepository, PlayerService playerService, GameStateRepository gameStateRepository, GameSyncService gameSyncService, GameEngine gameEngine, DTOEntityMapper dtoEntityMapper) {
+        this.gameEntityRepository = gameEntityRepository;
         this.playerRepository = playerRepository;
+        this.gameStateRepository = gameStateRepository;
+        this.gameSyncService = gameSyncService;
         this.gameEngine = gameEngine;
         this.dtoEntityMapper = dtoEntityMapper;
     }
 
     public Mono<GameEntity> createGame(String playerName) {
-        PlayerEntity player = new PlayerEntity();
-        player.setPlayerName(playerName);
-        player.setPlayerWins(0);
-        player.setPlayerLosses(0);
+        PlayerEntity newPlayer = new PlayerEntity();
+        newPlayer.setPlayerName(playerName);
+        newPlayer.setPlayerWins(0);
+        newPlayer.setPlayerLosses(0);
 
-        return playerRepository.save(player)
+        return playerRepository.save(newPlayer)
                 .flatMap(savedPlayer -> {
-                    GameState game = new GameState();
-                    game.setPlayerId(savedPlayer.getPlayerId());
-                    game.setGameStatus(GameStatus.IN_PROGRESS);
-                    game.setTurnType(TurnType.PLAYER_TURN);
-                    game.setGameResult(GameResult.ONGOING);
-                    return gameRepository.save(game);
+                    GameState gameState = gameEngine.initializeGame(savedPlayer);
+                    return gameStateRepository.save(gameState)
+                            .flatMap(gameSyncService::syncState);
                 });
     }
 
+
     public Mono<GameEntity> getGameById(Long gameId) {
-        return gameRepository.findById(gameId)
+        return gameEntityRepository.findByGameId(gameId)
                 .switchIfEmpty(Mono.error(new GameNotFoundException(gameId)));
     }
 
     public Mono<GameResponseDTO> playHand(PlayRequestDTO playRequestDTO) {
-        return gameRepository.findById(playRequestDTO.getGameId())
+        return gameStateRepository.findByGameId(playRequestDTO.getGameId())
                 .switchIfEmpty(Mono.error(new GameNotFoundException(playRequestDTO.getGameId())))
-                .flatMap(game -> {
-                    if (game.getGameStatus() != GameStatus.IN_PROGRESS) {
+                .flatMap(gameState -> {
+                    if (!gameState.getGameStatus().isFinalState()) {
+                        return processPlayerAction(gameState, playRequestDTO.getAction());
+                    } else {
                         return Mono.error(new InvalidGameStateException());
                     }
-                    return processPlayerAction(game, playRequestDTO.getAction());
                 })
                 .flatMap(this::evaluateGameState)
-                .map();
+                .flatMap(gameStateRepository::save)
+                .flatMap(gameSyncService::syncState)
+                .map(dtoEntityMapper::toGameResponseDTO);
+
     }
 
-    private Mono<?> evaluateGameState(Object o) {
+    private Mono<GameState> evaluateGameState(GameState gameState) {
+        gameEngine.decideWinner(gameState);
+        return Mono.just(gameState);
     }
 
-    private Mono<?> processPlayerAction(GameEntity game, PlayType action) {
+
+    private Mono<GameState> processPlayerAction(GameState gameState, PlayType action) {
+        switch (action) {
+            case HIT -> gameEngine.chooseHit(gameState);
+            case STAND -> gameEngine.chooseStand(gameState);
+            default -> {
+                return Mono.error(new InvalidActionException());
+            }
+        }
+        return Mono.just(gameState);
     }
 
     public Mono<Void> deleteGame(Long gameId){
-        return gameRepository.deleteById(gameId)
+        gameStateRepository.deleteByGameId(gameId)
+                .switchIfEmpty(Mono.error(new GameNotFoundException(gameId)));
+        return gameEntityRepository.deleteByGameId(gameId)
                 .switchIfEmpty(Mono.error(new GameNotFoundException(gameId)));
     }
 }
