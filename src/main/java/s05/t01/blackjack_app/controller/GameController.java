@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.domain.dtos.*;
+import s05.t01.blackjack_app.exceptions.GameNotFoundException;
+import s05.t01.blackjack_app.exceptions.InvalidGameStateException;
 import s05.t01.blackjack_app.service.GameService;
 
 @RestController
@@ -32,14 +34,27 @@ public class GameController {
                 .map(gameDTO -> ResponseEntity.status(HttpStatus.CREATED).body(gameDTO));
     }
 
-    @PutMapping("/game/{id}/play")
+    @PutMapping("/{gameId}/play")
     @Operation(summary = "Play a hand")
-    @ApiResponse(responseCode = "200", description = "The hand was played. ")
-    public Mono<ResponseEntity<GameResponseDTO>> postHand(@PathVariable Long gameId,
-                         @RequestBody PlayRequestDTO playRequestDTO){
+    @ApiResponse(responseCode = "200", description = "The hand was played successfully")
+    @ApiResponse(responseCode = "404", description = "Game not found")
+    @ApiResponse(responseCode = "400", description = "Invalid game state or action")
+    public Mono<ResponseEntity<GameResponseDTO>> playHand(
+            @PathVariable Long gameId,
+            @RequestBody PlayRequestDTO playRequestDTO) {
+
+        if (!gameId.equals(playRequestDTO.getGameId())) {
+            return Mono.just(ResponseEntity.badRequest().build());
+        }
+
         return gameService.playHand(playRequestDTO)
-                .map(dtoEntityMapper::toGameResponseDTO)
-                .map(gameDT -> ResponseEntity.status(HttpStatus.OK).body(gameDT));
+                .map(ResponseEntity::ok)
+                .onErrorResume(GameNotFoundException.class,
+                        ex -> Mono.just(ResponseEntity.notFound().build()))
+                .onErrorResume(InvalidGameStateException.class,
+                        ex -> Mono.just(ResponseEntity.badRequest().build()))
+                .onErrorResume(IllegalArgumentException.class,
+                        ex -> Mono.just(ResponseEntity.badRequest().build()));
     }
 
     @GetMapping("/game/{gameId}")

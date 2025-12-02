@@ -24,4 +24,8 @@ public enum Rank {
     Rank(int cardValue) {
         this.cardValue = cardValue;
     }
+
+    public int getCardValue(){
+        return this.cardValue;
+    }
 }

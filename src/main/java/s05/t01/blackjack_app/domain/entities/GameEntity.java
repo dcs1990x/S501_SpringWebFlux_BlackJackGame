@@ -1,49 +1,51 @@
 package s05.t01.blackjack_app.domain.entities;
 
-import jakarta.persistence.*;
-import org.springframework.data.annotation.Transient;
 import lombok.*;
-import s05.t01.blackjack_app.domain.dtos.CardDTO;
-import s05.t01.blackjack_app.domain.game_model.GameResult;
-import s05.t01.blackjack_app.domain.game_model.GameStatus;
-import s05.t01.blackjack_app.domain.game_model.GameTurnPhase;
-import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import s05.t01.blackjack_app.domain.game_model.*;
+import java.time.Instant;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "games")
+@Builder
+@Document(collection = "games")
 public class GameEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Game ID")
+    private String id;
+
+    @Indexed
+    @Field("game_id")
     private Long gameId;
 
-    @Column(name = "Player ID", nullable = false)
+    @Indexed
+    @NonNull
+    @Field("player_id")
     private Long playerId;
 
-    @Column(name = "Player Name", nullable = false)
+    @NonNull
+    @Field("player_name")
     private String playerName;
 
-    @Column(name = "Created at")
-    private LocalDateTime createdDate;
+    @NonNull
+    @Field("created_date")
+    private Instant createdDate;
 
-    @Column(name = "Game Status", nullable = false)
+    @NonNull
+    @Field("game_status")
     private GameStatus gameStatus;
 
-    @Column(name = "Finished at")
-    private LocalDateTime finishedDate;
+    @Field("finished_date")
+    private Instant finishedDate;
 
-    @Column(name = "Game Result")
+    @Field("game_result")
     private GameResult gameResult;
 
-    @Transient private GameTurnPhase gameTurnPhase;
-    @Transient private int playerScore;
-    @Transient private int dealerScore;
-    @Transient private List<CardDTO> playerHand;
-    @Transient private List<CardDTO> dealerHand;
+    @Field("game_turn_phase")
+    private TurnType turnType;
 }

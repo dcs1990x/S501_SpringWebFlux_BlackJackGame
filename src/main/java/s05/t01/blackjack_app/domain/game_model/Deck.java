@@ -13,7 +13,7 @@ public class Deck implements DeckFactory{
 
     private SecureRandom randomNum;
 
-    public List<Card> createSuffledDeck() {
+    public List<Card> createShuffledDeck() {
         List<Card> deck =
                 Arrays.stream(Suit.values())
                         .flatMap(suit ->
