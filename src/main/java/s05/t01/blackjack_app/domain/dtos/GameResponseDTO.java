@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import s05.t01.blackjack_app.domain.game_model.GameState;
 import s05.t01.blackjack_app.domain.game_model.GameStatus;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -20,9 +19,9 @@ public class GameResponseDTO {
     private String playerName;
     private int playerScore;
     private int dealerScore;
-    private LocalDate createdDate;
+    private Instant createdDate;
     private GameStatus gameStatus;
-    private LocalDate finishedDate;
+    private Instant finishedDate;
     private String winnerName;
     private List<CardDTO> playerHand;
     private List<CardDTO> dealerHand;
@@ -33,10 +32,10 @@ public class GameResponseDTO {
                 .playerName(state.getPlayerName())
                 .playerScore(state.getPlayerScore())
                 .dealerScore(state.getDealerScore())
-                .createdDate(state.getCreatedDate().atZone(ZoneId.systemDefault()).toLocalDate())
+                .createdDate(state.getCreatedDate())
                 .gameStatus(state.getGameStatus())
                 .finishedDate(state.getFinishedDate() != null
-                        ? state.getFinishedDate().atZone(ZoneId.systemDefault()).toLocalDate()
+                        ? state.getFinishedDate()
                         : null)
                 .winnerName(state.getGameResult() != null ? state.getGameResult().name() : null)
                 .playerHand(CardDTO.fromCards(state.getPlayerCards()))

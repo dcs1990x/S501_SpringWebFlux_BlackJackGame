@@ -1,47 +1,48 @@
 package s05.t01.blackjack_app.domain.entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+import java.time.Instant;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "players")
+@Table("players")
 public class PlayerEntity {
 
-    @Column(name = "ID", nullable = false)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column("id")
     private Long playerId;
 
-    @Column(name = "Name", nullable = false, unique = true)
+    @Column("name")
     @NonNull
-    @NotBlank
     private String playerName;
 
-    @Column(name = "Number of games won", nullable = false)
-    @NotBlank
-    @PositiveOrZero
-    private int playerWins;
+    @Column("total_games")
+    private Integer totalGames;
 
-    @Column(name = "Number of games lost", nullable = false)
-    @NotBlank
-    @PositiveOrZero
-    private int playerLosses;
+    @Column("player_wins")
+    private Integer playerWins;
 
-    public int calculateTotalGames(){
-        return this.playerWins + this.playerLosses;
+    @Column("player_losses")
+    private Integer playerLosses;
+
+    @Column("created_date")
+    private Instant createdDate;
+
+    public Integer calculateTotalGames() {
+        return (playerWins != null ? playerWins : 0) +
+                (playerLosses != null ? playerLosses : 0);
     }
 
     public Double calculateWinRate() {
-        int totalGames = calculateTotalGames();
-        if (totalGames == 0) {
+        int total = calculateTotalGames();
+        if (total == 0) {
             return 0.0;
         }
-        return (double) ((this.playerWins / totalGames) * 100);
+        return (playerWins != null ? (double) playerWins / total * 100 : 0.0);
     }
 }
