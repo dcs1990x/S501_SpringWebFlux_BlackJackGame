@@ -11,11 +11,10 @@ import s05.t01.blackjack_app.domain.dtos.PlayerResponseDTO;
 import s05.t01.blackjack_app.domain.dtos.RankingResponseDTO;
 import s05.t01.blackjack_app.domain.dtos.UpdatePlayerNameRequestDTO;
 import s05.t01.blackjack_app.service.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/blackjack")
+@RequestMapping("/game")
 @Tag(name = "Blackjack API", description =" REST API for Blackjack game with R2DBC")
 public class PlayerController {
 

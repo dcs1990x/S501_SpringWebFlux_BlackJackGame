@@ -12,16 +12,15 @@ import s05.t01.blackjack_app.service.RankingService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ranking")
+@RequestMapping("/game")
 @RequiredArgsConstructor
 public class RankingController {
 
     private final RankingService rankingService;
 
-    @GetMapping
-    public ResponseEntity<Mono<List<RankingResponseDTO>>> getPlayersRanking() {
-        return ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .body(rankingService.getPlayerRanking());
+    @GetMapping("/ranking")
+    public Mono<ResponseEntity<List<RankingResponseDTO>>> getPlayersRanking() {
+        return rankingService.getPlayerRanking()
+                .map(ResponseEntity::ok);
     }
 }
