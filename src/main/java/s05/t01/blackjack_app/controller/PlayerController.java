@@ -19,12 +19,10 @@ import java.util.List;
 public class PlayerController {
 
     private final PlayerService playerService;
-    private final GameService gameService;
     private final RankingService rankingService;
 
-    public PlayerController(PlayerService playerService, GameService gameService, RankingService rankingService) {
+    public PlayerController(PlayerService playerService, RankingService rankingService) {
         this.playerService = playerService;
-        this.gameService = gameService;
         this.rankingService = rankingService;
     }
 
@@ -48,7 +46,7 @@ public class PlayerController {
     @Operation(summary = "Delete a player by ID")
     @ApiResponse(responseCode = "204", description = "The player was deleted successfully.")
     public Mono<ResponseEntity<Void>> deletePlayer(@PathVariable Long playerId) {
-        return gameService.deleteGame(playerId)
+        return playerService.deletePlayerById(playerId)
                 .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }
