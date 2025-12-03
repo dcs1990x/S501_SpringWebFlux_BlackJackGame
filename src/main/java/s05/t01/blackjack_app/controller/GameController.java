@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.domain.dtos.*;
 import s05.t01.blackjack_app.exceptions.GameNotFoundException;
@@ -25,7 +26,7 @@ public class GameController {
         this.dtoEntityMapper = dtoEntityMapper;
     }
 
-    @PostMapping("/game/new")
+    @PostMapping("/new")
     @Operation(summary = "Create a new game")
     @ApiResponse(responseCode = "201", description = "The game was created successfully.")
     public Mono<ResponseEntity<GameResponseDTO>> postNewGame(@RequestBody CreateGameRequestDTO gameRequestDTO) {
@@ -57,7 +58,12 @@ public class GameController {
                         ex -> Mono.just(ResponseEntity.badRequest().build()));
     }
 
-    @GetMapping("/game/{gameId}")
+    @GetMapping
+    public Flux<GameResponseDTO> getAllGames() {
+        return gameService.getAllGames();
+    }
+
+    @GetMapping("/{gameId}")
     @Operation(summary = "Get game details by game ID")
     @ApiResponse(responseCode = "200", description = "The game with the entered ID was found.")
     @ApiResponse(responseCode = "404", description = "A game with the entered ID could not be found.")
@@ -67,7 +73,7 @@ public class GameController {
                 .map(gameResponseDTO -> ResponseEntity.status(HttpStatus.OK).body(gameResponseDTO));
     }
 
-    @DeleteMapping("/game/{id}/delete")
+    @DeleteMapping("/{gameId}")
     @Operation(summary = "Delete a game by ID")
     @ApiResponse(responseCode = "204", description = "The game was deleted successfully.")
     public Mono<ResponseEntity<Void>> deleteGame(@PathVariable Long gameId) {

@@ -1,8 +1,5 @@
 spring:
   r2dbc:
-    url: ${POSTGRES_URL:r2dbc:postgresql://localhost:5432/mydb}
-    username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:password}
-  data:
-    mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/mydb}
+    url: r2dbc:postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+  flyway:
+    enabled: false

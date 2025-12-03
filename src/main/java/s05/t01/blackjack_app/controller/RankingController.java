@@ -1,7 +1,6 @@
 package s05.t01.blackjack_app.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,13 +11,13 @@ import s05.t01.blackjack_app.service.RankingService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/ranking")
 @RequiredArgsConstructor
 public class RankingController {
 
     private final RankingService rankingService;
 
-    @GetMapping("/ranking")
+    @GetMapping
     public Mono<ResponseEntity<List<RankingResponseDTO>>> getPlayersRanking() {
         return rankingService.getPlayerRanking()
                 .map(ResponseEntity::ok);

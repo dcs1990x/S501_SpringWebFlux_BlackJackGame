@@ -1,6 +1,7 @@
 package s05.t01.blackjack_app.service;
 
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.domain.dtos.*;
 import s05.t01.blackjack_app.domain.game_model.*;
@@ -41,6 +42,11 @@ public class GameService {
                 });
     }
 
+    public Flux<GameResponseDTO> getAllGames() {
+        return gameEntityRepository.findAll()
+                .switchIfEmpty(Flux.error(new GameNotFoundException()))
+                .map(dtoEntityMapper::toGameResponseDTO);
+    }
 
     public Mono<GameEntity> getGameById(Long gameId) {
         return gameEntityRepository.findByGameId(gameId)
@@ -61,14 +67,12 @@ public class GameService {
                 .flatMap(gameStateRepository::save)
                 .flatMap(gameSyncService::syncState)
                 .map(dtoEntityMapper::toGameResponseDTO);
-
     }
 
     private Mono<GameState> evaluateGameState(GameState gameState) {
         gameEngine.decideWinner(gameState);
         return Mono.just(gameState);
     }
-
 
     private Mono<GameState> processPlayerAction(GameState gameState, PlayType action) {
         switch (action) {
