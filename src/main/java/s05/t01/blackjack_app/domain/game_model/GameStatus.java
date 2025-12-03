@@ -1,0 +1,24 @@
+package s05.t01.blackjack_app.domain.game_model;
+
+import lombok.Getter;
+
+@Getter
+public enum GameStatus {
+
+    IN_PROGRESS("In progress"),
+    FINISHED("Finished");
+
+    private String statusMessage;
+
+    GameStatus(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    public boolean isGameActive(){
+        return this == IN_PROGRESS;
+    }
+
+    public boolean isFinalState() {
+        return this == FINISHED;
+    }
+}
