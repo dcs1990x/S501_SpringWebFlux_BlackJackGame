@@ -1,4 +1,4 @@
-# 🎰 Task S5.01 – Blackjack API with Spring Boot & WebFlux
+# 🂡 Sprint 5, Task 1: Blackjack API with Spring Boot & WebFlux
 ## 📋 Project Overview
 
 This project consists of developing a reactive REST API that manages a Blackjack game using Spring Boot and Spring WebFlux.
