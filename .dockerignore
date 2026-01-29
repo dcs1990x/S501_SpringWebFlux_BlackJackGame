@@ -27,7 +27,7 @@ Thumbs.db
 logs/
 
 # Docker
-Dockerfile
+dockerfile
 .dockerignore
 
 # Git

@@ -1,5 +1,7 @@
 spring:
   r2dbc:
-    url: r2dbc:postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+    url: r2dbc:postgresql://localhost:9000/users
+    username: root
+    password:
   flyway:
     enabled: false
