@@ -7,7 +7,9 @@ import s05.t01.blackjack_app.domain.dtos.*;
 import s05.t01.blackjack_app.domain.game_model.*;
 import s05.t01.blackjack_app.exceptions.*;
 import s05.t01.blackjack_app.domain.entities.*;
-import s05.t01.blackjack_app.repository.*;
+import s05.t01.blackjack_app.repository.mongodb.GameEntityRepository;
+import s05.t01.blackjack_app.repository.mongodb.GameStateRepository;
+import s05.t01.blackjack_app.repository.r2dbc.PlayerRepository;
 
 @Service
 public class GameService {

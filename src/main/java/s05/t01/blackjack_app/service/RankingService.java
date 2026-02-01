@@ -4,7 +4,7 @@ import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.domain.dtos.RankingResponseDTO;
 import org.springframework.stereotype.Service;
 import s05.t01.blackjack_app.domain.entities.PlayerEntity;
-import s05.t01.blackjack_app.repository.PlayerRepository;
+import s05.t01.blackjack_app.repository.r2dbc.PlayerRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

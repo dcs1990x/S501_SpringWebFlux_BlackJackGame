@@ -1,7 +1,6 @@
 spring:
-  r2dbc:
-    url: r2dbc:postgresql://localhost:9000/users
-    username: root
-    password:
-  flyway:
-    enabled: false
+  application:
+    name: blackjack-app
+
+server:
+  port: 9009
