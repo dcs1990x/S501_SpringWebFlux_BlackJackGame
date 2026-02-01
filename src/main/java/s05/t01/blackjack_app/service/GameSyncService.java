@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import s05.t01.blackjack_app.domain.entities.GameEntity;
 import s05.t01.blackjack_app.domain.game_model.GameState;
-import s05.t01.blackjack_app.repository.GameEntityRepository;
+import s05.t01.blackjack_app.repository.mongodb.GameEntityRepository;
 import java.time.Instant;
 
 @Service

@@ -1,0 +1,72 @@
+services:
+  app:
+    build: .
+    container_name: blackjack-app
+    ports:
+      - "9009:9009"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      JAVA_OPTS: -Xmx512m -Xms256m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    networks:
+      - blackjack-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-blackjack
+    environment:
+      POSTGRES_DB: blackjackdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - blackjack-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7.0
+    container_name: mongo-blackjack
+    environment:
+      MONGO_INITDB_DATABASE: blackjackdb
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - blackjack-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--username", "admin",
+          "--password", "admin123",
+          "--authenticationDatabase", "admin",
+          "--eval", "db.adminCommand('ping')"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  blackjack-network:
+
+volumes:
+  postgres_data:
+  mongo_data:

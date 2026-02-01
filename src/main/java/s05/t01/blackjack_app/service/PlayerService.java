@@ -7,7 +7,8 @@ import s05.t01.blackjack_app.exceptions.PlayerNotFoundException;
 import s05.t01.blackjack_app.domain.dtos.PlayerResponseDTO;
 import s05.t01.blackjack_app.domain.dtos.UpdatePlayerNameRequestDTO;
 import s05.t01.blackjack_app.domain.dtos.DTOEntityMapper;
-import s05.t01.blackjack_app.repository.*;
+import s05.t01.blackjack_app.repository.mongodb.GameEntityRepository;
+import s05.t01.blackjack_app.repository.r2dbc.PlayerRepository;
 
 @Service
 public class PlayerService {

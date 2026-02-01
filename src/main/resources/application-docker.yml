@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongo-blackjack:27017/blackjackdb
+      database: blackjackdb
+
+  r2dbc:
+    url: r2dbc:postgresql://postgres:5432/blackjackdb
+    username: postgres
+    password: postgres123
+    pool:
+      enabled: true
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/blackjackdb
+    username: postgres
+    password: postgres123
